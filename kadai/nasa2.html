@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>NASA API</title>
+    <!-- <link rel="stylesheet" href="./css/style.css">  -->
+</head>
+
+<body>
+    <div class="search_area">
+        <div id="logo"><img src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg" class="logo_image"></div>
+                NASAは毎日、天文記事を配信しています。<br>
+                読みたい記事の日付を 2022-1-14 のように入力してください。<br>
+        <input type="text" id="search_text" value='2022-1-1'>
+        <button id="search_button">検索</button>
+        <div id="loading" style="display: none;"><img src="./images/circle.gif" class="loading_icon"></div>
+        <div id="result"></div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        $("#search_button").on("click", function () {
+            $("#loading").css('display', 'block');
+            $("#result").html('');
+            // 検索ボックスの文字を取得する
+            let searchText = $("#search_text").val();
+            // みなさんのtoken
+            // let token = "16f497b6bbb579315cc92a088a2f82deef014760"
+            // searchTextに入ってきた文字列を使ってaxiosのURLを組み立てる
+            // その上で、axios.getを使ってAPIにアクセスする
+            axios.get(`https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=${searchText}`)
+                // axios.get(`https://api.nasa.gov/planetary/apod?api_key=hxZbcJnjXYEBYf5PeiAclqnWc2BElTmppF5X9avq&date=${searchText}`)
+                // headers: {
+                // Authorization: `Bearer ${token}`,
+                // }
+                // })
+                .then(function (response) {
+                    $("#loading").css('display', 'none');
+                    // response.dataでいい感じにサマリにしてくれた配列を返してもらえるようになる
+                    // console.log(response.data);
+                    let data = response.data;
+                    console.log(data);
+                    let str = "";
+                    // for(let i = 0; i < data.length; i++) {
+                    str += `<p>${data.copyright}</p>`
+                    str += `<p>${data.date}</p>`
+                    str += `<img src="${data.url}"></img><br>`
+                    str += `<h2>${data.title}</h2>`
+                    str += `<p>${data.explanation}</p>`
+                    // str += `<a href="${data.url}">${data.title}</a><br>`
+                    // str += `<a href="${data[i].url}">${data[i].title}</a><br>`
+                    console.log(str);
+                    // }
+                    $("#result").html(str);
+                }).catch(function () {
+                    alert('日付を　2022-01-14　のように入力してください');
+                });
+            // 44d19d44-d3a1-5f29-32e5-820bba22cbbb:fx
+            // axios.get(`https://api-free.deepl.com/v2/translate?auth_key=44d19d44-d3a1-5f29-32e5-820bba22cbbb:fx&text=${data.explanation}`);
+            // .then(function(response){
+            //   let data = response.data;
+            //   debugger
+            //   console.log(data);
+            //   str = `<p>${data.title}</p>`
+            //   $("#result").append(str);
+
+            // }).catch(function(){
+            //   console.log('NG2')
+            // });
+        });</script>
+</body>
+
+</html>
