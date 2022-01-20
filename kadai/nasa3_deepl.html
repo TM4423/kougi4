@@ -9,9 +9,10 @@
 
 <body>
     <div class="search_area">
-        <div id="logo"><img src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg" class="logo_image"></div>
-                NASAは毎日、天文記事を配信しています。<br>
-                読みたい記事の日付を 2022-1-14 のように入力してください。<br>
+        <div id="logo"><img src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
+                class="logo_image"></div>
+        NASAは毎日、天文記事を配信しています。<br>
+        読みたい記事の日付を 2022-1-14 のように入力してください。<br>
         <input type="text" id="search_text" value='2022-1-1'>
         <button id="search_button">検索</button>
         <div id="loading" style="display: none;"><img src="./images/circle.gif" class="loading_icon"></div>
@@ -27,12 +28,11 @@
             // 検索ボックスの文字を取得する
             let searchText = $("#search_text").val();
             // みなさんのtoken
-            // let token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            // let token = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             // searchTextに入ってきた文字列を使ってaxiosのURLを組み立てる
             // その上で、axios.getを使ってAPIにアクセスする
-            api_key='';
-            axios.get(`https://api.nasa.gov/planetary/apod?${api_key}&date=${searchText}`)
-                // 
+            const api_key='hxZbcJnjXYEBYf5PeiAclqnWc2BElTmppF5X9avq';
+            axios.get(`https://api.nasa.gov/planetary/apod?api_key=${api_key}&date=${searchText}`)
                 // headers: {
                 // Authorization: `Bearer ${token}`,
                 // }
@@ -49,16 +49,37 @@
                     str += `<p>${data.date}</p>`
                     str += `<img src="${data.url}"></img><br>`
                     str += `<h2>${data.title}</h2>`
-                    str += `<p>${data.explanation}</p>`
+                    str += `<p id='explanation'>${data.explanation}</p>`
                     // str += `<a href="${data.url}">${data.title}</a><br>`
                     // str += `<a href="${data[i].url}">${data[i].title}</a><br>`
                     console.log(str);
+                    let exp = data.explanation;
+                    console.log(exp);
                     // }
                     $("#result").html(str);
+                    translator(exp);
                 }).catch(function () {
                     alert('日付を　2022-01-14　のように入力してください');
                 });
-        });</script>
+        });
+
+        const translator = (exp) => {
+            alert('translator is OK');
+            alert(exp);
+            const obj = {
+                text: exp,
+                source_lang: "JA"
+            }
+            const auth_key = '44d19d44-d3a1-5f29-32e5-820bba22cbbb:fx';
+            axios.post(`'https://api-free.deepl.com/v2/translate?auth_key=${auth_key}'`, obj)
+                .then((url) => {
+                    console.log(url.text);
+                })
+                .catch(err => {
+                    console.log("err:", err);
+                })
+        }
+    </script>
 </body>
 
 </html>
